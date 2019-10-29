@@ -6,26 +6,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.sicoapp.exercise.R
 import com.sicoapp.exercise.PrimjerImpl
+import com.sicoapp.exercise.adapter.MainRecyclerView
 import com.sicoapp.exercise.databinding.MainFragmentBinding
-import com.sicoapp.model.Primjer
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.main_fragment.*
-import kotlin.math.PI
 
 
 class MainFragment : Fragment() {
-    
-    private lateinit var dataBinding: MainFragmentBinding
-
-
 
     companion object {
         fun newInstance() = MainFragment()
     }
+
+    private lateinit var dataBinding: MainFragmentBinding
+    private  var movieListAdapter= MainRecyclerView(arrayListOf())
 
     private lateinit var viewModel: MainViewModel
 
@@ -34,16 +30,27 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.main_fragment, container, false )
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         return dataBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+       viewModel.fetchFromRemote()
         // TODO: Use the ViewModel
         ispis()
-    }
+        observeViewModel()
+   }
 
+    private fun observeViewModel(){
+        viewModel.movies1.observe(this ,androidx.lifecycle.Observer {movies->
+            movies?.let {
+            moviesList.visibility = View.VISIBLE
+            movieListAdapter.updateMoviesList(movies)
+        }
+        })
+
+    }
 
     private fun ispis(){
 
@@ -54,14 +61,11 @@ class MainFragment : Fragment() {
         dataBinding.ageDrugi.text = PrimjerImpl.drugi().age.toString()
 
 
-
-
-
         //dataBinding.age.text = PrimjerImpl.prvi().age.toString()
        // dataBinding.ageDrugi.text = PrimjerImpl.prvi().age.toString()
 
-        //var name :TextView = view!!.findViewById(R.id.name)
-       // var year :TextView = view!!.findViewById(R.id.age)
+        //var name :TextView = view1!!.findViewById(R.id.name)
+       // var year :TextView = view1!!.findViewById(R.id.age)
 
         //var ime = PrimjerImpl.prvi().name
        // var godine = PrimjerImpl.prvi().age

@@ -2,6 +2,7 @@ package com.sicoapp.exercise
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.sicoapp.exercise.ui.main.ItemMovieFr
 import com.sicoapp.exercise.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
